@@ -1,0 +1,19 @@
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    height: calc(100% - 56px); /* Adjusted for navbar height */
+    overflow-y: auto;
+  }
+  
+  /* Ensure main content doesn’t get hidden behind the sidebar */
+  .main-content {
+    margin-left: 250px;
+  }
+  
+  .navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1030;
+  }
+  

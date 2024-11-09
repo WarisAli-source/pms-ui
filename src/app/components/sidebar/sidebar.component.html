@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <button class="btn btn-secondary" (click)="toggleSidebar()">☰</button>
+      <a class="navbar-brand" href="#">Welcome to the PMS</a>
+    </div>
+  </nav>
+  
+  <!-- Sidebar -->
+  <div
+    *ngIf="isSidebarVisible"
+    class="bg-dark text-white sidebar p-3"
+    style="width: 250px; position: fixed; top: 56px; left: 0; height: calc(100% - 56px); z-index: 1000;"
+  >
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link text-white" routerLink="" >Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" (click)="navigateToPatients()" style="cursor: pointer;">Patients</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" >Appointments</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" >Vitals</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" >Medications</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" >Reports</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" >Settings</a>
+      </li>
+    </ul>
+  </div>
+  
