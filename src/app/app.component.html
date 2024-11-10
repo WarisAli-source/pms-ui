@@ -4,3 +4,12 @@
 <div class="main-content p-4" [style.marginLeft]="isSidebarVisible ? '250px' : '0'" style="margin-top: 56px;">
   <router-outlet></router-outlet>  <!-- The routed component will be displayed here -->
 </div>
+
+<div id="toast" class="toast align-items-center position-fixed top-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" [ngClass]="toastClass" *ngIf="toastMessage">
+  <div class="d-flex">
+    <div class="toast-body">
+      {{ toastMessage }}
+    </div>
+    <button type="button" class="btn-close me-2 m-auto" (click)="hideToast()" aria-label="Close"></button>
+  </div>
+</div>

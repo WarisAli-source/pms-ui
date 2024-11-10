@@ -3,6 +3,7 @@ import { Patient, PatientService } from '../../services/patient.service';
 import { CommonModule, DatePipe} from '@angular/common';
 import { FormGroup, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import $ from 'jquery';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-patients',
@@ -28,33 +29,33 @@ export class PatientsComponent implements OnInit {
     zipCode: '',
   }; 
 
-  constructor(private fb: FormBuilder, private patientService: PatientService) {}
+  constructor(private fb: FormBuilder, private patientService: PatientService,private toastr: ToastrService) {}
   ngOnInit(): void {
     this.getAllPatients();
   }
 
   getAllPatients(): void {
-    
+  
     this.patientService.getAllPatients().subscribe(
       (data) => {
         this.patients = data;
+        this.toastr.success('Patients Data Fetched Successfully');
       },
       (error) => {
-        console.error('Error fetching patients', error);
+        this.toastr.error('Something went wrong !!!');
       }
     );
   }
-  onSubmit(patientForm: any) {debugger
+  onSubmit(patientForm: any) {
       const newPatient: Patient = this.newPatient;
       this.patientService.registerPatient(newPatient).subscribe(
         (response) => {
-          debugger
-          console.log('Patient added successfully', response);
+          this.toastr.success('Patient added successfully');
           $('.btn-close').click(); 
           this.getAllPatients();
         },
         (error) => {
-          console.error('Error adding patient', error);
+          this.toastr.error('Something went wrong !!!');
         }
       );
   }
@@ -62,19 +63,33 @@ export class PatientsComponent implements OnInit {
   editPatient(id: number): void {
     this.patientService.getPatientById(id).subscribe(
       (patient) => {
-        console.log('Editing patient', patient);
+        this.newPatient = patient;
       },
       (error) => {
-        console.error('Error fetching patient data for editing', error);
+        this.toastr.error('Something went wrong !!!');
       }
     );
   }
+  updatePatient(patientForm :any){
+    this.patientService.updatePatient(this.newPatient.id,this.newPatient).subscribe(
+      (resp) =>{
+        this.toastr.success('Patient Updated successfully');
+        $('.btn-close').click(); 
+        this.getAllPatients();
+      },(error) => {
+        this.toastr.error('Something went wrong !!!');
+      }
+    )
+  }
 
   deletePatient(id: number): void {
+    debugger
     this.patientService.deletePatient(id).subscribe(
       (response) => {
+        debugger;
         if (response === 'Success') {
-          this.patients = this.patients.filter(patient => patient.id !== id);
+          this.toastr.success('Patient Deleted successfully');
+          this.getAllPatients();
         } else {
           console.error('Failed to delete patient');
         }

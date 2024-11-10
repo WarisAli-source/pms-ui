@@ -61,4 +61,8 @@
       margin: 5px;
     }
   }
+  #toast {
+    min-width: 250px;
+    z-index: 1055; /* Ensures it appears above other elements */
+  }
   

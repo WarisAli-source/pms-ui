@@ -19,7 +19,7 @@
   
             <!-- Edit and Delete Buttons -->
             <div class="d-flex justify-content-between">
-              <button class="btn btn-warning btn-sm" (click)="editPatient(patient.id)">Edit</button>
+              <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#patientModal" (click)="editPatient(patient.id)">Edit</button>
               <button class="btn btn-danger btn-sm" (click)="deletePatient(patient.id)">Delete</button>
             </div>
           </div>
@@ -153,14 +153,26 @@
               [(ngModel)]="newPatient.zipCode"
             />
           </div>
-          <button
-            type="submit"
-            class="btn btn-primary"
-          >
-            Submit
-          </button>
+          @if (newPatient.id === 0) {
+            <button type="submit" class="btn btn-primary"> Submit</button>
+          }@else {
+            <button
+            type="button"
+            class="btn btn-primary" (click)="updatePatient(patientForm)">Update</button>
+          }
+          
+           
         </form>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+    Hello, world! This is a toast message.
+   </div>
+    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
   </div>
 </div>
