@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Patient, PatientService } from '../../services/patient.service';
 import { CommonModule, DatePipe} from '@angular/common';
 import { FormGroup, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import $ from 'jquery';
 import { ToastrService } from 'ngx-toastr';
+import { PatientWithRecordsDTO } from '../../services/medical-records.service';
 
 @Component({
   selector: 'app-patients',

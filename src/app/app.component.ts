@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'pms-ui';
+  title = 'Patient Management System';
   isSidebarVisible = true;
 
   constructor(private router: Router,private toastService: ToastService) {}

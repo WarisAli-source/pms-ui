@@ -20,6 +20,10 @@ export class SidebarComponent {
     this.isSidebarVisible = false; 
     this.router.navigate(['/patients']); 
   }
+  navigateToMedicalRecords() {
+    this.isSidebarVisible = false; 
+    this.router.navigate(['/medical-records']); 
+  }
  
 }
 
