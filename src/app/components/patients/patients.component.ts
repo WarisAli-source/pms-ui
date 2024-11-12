@@ -100,4 +100,31 @@ export class PatientsComponent implements OnInit {
       }
     );
   }
+  currentSortField: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
+  
+  sortData(field: keyof Patient): void {
+    this.patients.sort((a, b) => {
+      const valueA = a[field];
+      const valueB = b[field];
+      
+      if (valueA < valueB) {
+        return this.sortDirection === 'asc' ? -1 : 1;
+      } else if (valueA > valueB) {
+        return this.sortDirection === 'asc' ? 1 : -1;
+      } else {
+        return 0;
+      }
+    });
+    
+    // Toggle the sort direction for the next click
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    this.currentSortField = field;
+  }
+  
+
+
+
+
+
 }

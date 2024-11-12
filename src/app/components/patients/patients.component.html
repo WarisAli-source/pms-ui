@@ -1,178 +1,108 @@
 <div class="container mt-4">
-    <h2 class="mb-4">Patient Records</h2>
-    <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#patientModal">Add New Patient</button>
+  <h2 class="mb-4">Patient Records</h2>
+  <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#patientModal">Add New Patient</button>
 
-  
-    <div class="row">
-      <div class="col-md-4" *ngFor="let patient of patients">
-        <!-- Patient Card -->
-        <div class="card mb-4">
-          <div class="card-header">
-            <h5 class="card-title">{{ patient.firstName }} {{ patient.lastName }}</h5>
-          </div>
-          <div class="card-body">
-            <p><strong>Date of Birth:</strong> {{ patient.dateOfBirth | date: 'shortDate' }}</p>
-            <p><strong>Gender:</strong> {{ patient.gender }}</p>
-            <p><strong>Phone:</strong> {{ patient.phone }}</p>
-            <p><strong>Email:</strong> {{ patient.email }}</p>
-            <p><strong>Address:</strong> {{ patient.street }}, {{ patient.city }}, {{ patient.state }} {{ patient.zipCode }}</p>
-  
-            <!-- Edit and Delete Buttons -->
-            <div class="d-flex justify-content-between">
-              <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#patientModal" (click)="editPatient(patient.id)">Edit</button>
-              <button class="btn btn-danger btn-sm" (click)="deletePatient(patient.id)">Delete</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>  
+  <!-- Sortable Table for Patient Records -->
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th (click)="sortData('firstName')">
+          First Name <span *ngIf="currentSortField === 'firstName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        </th>
+        <th (click)="sortData('lastName')">
+          Last Name <span *ngIf="currentSortField === 'lastName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        </th>
+        <th (click)="sortData('dateOfBirth')">
+          Date of Birth <span *ngIf="currentSortField === 'dateOfBirth'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        </th>
+        <th (click)="sortData('gender')">
+          Gender <span *ngIf="currentSortField === 'gender'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        </th>
+        <th (click)="sortData('phone')">
+          Phone <span *ngIf="currentSortField === 'phone'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        </th>
+        <th (click)="sortData('email')">
+          Email <span *ngIf="currentSortField === 'email'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        </th>
+      
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let patient of patients">
+        <td>{{ patient.firstName }}</td>
+        <td>{{ patient.lastName }}</td>
+        <td>{{ patient.dateOfBirth | date: 'shortDate' }}</td>
+        <td>{{ patient.gender }}</td>
+        <td>{{ patient.phone }}</td>
+        <td>{{ patient.email }}</td>
+        <td>{{ patient.street }}, {{ patient.city }}, {{ patient.state }} {{ patient.zipCode }}</td>
+        <td>
+          <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#patientModal" (click)="editPatient(patient.id)">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="deletePatient(patient.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
+<!-- Modal for Adding/Editing Patient -->
 <div class="modal fade" id="patientModal" tabindex="-1" aria-labelledby="patientModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="patientModalLabel">Add New Patient</h5>
+        <h5 class="modal-title" id="patientModalLabel">{{ newPatient.id === 0 ? 'Add New Patient' : 'Edit Patient' }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form #patientForm="ngForm" (ngSubmit)="onSubmit(patientForm)">
-          <div class="form-group">
-            <label for="firstName">First Name</label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              class="form-control"
-              required
-              [(ngModel)]="newPatient.firstName"
-            />
+        <form #patientForm="ngForm" (ngSubmit)="newPatient.id === 0 ? onSubmit(patientForm) : updatePatient(patientForm)">
+          <div class="mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" id="firstName" class="form-control" [(ngModel)]="newPatient.firstName" name="firstName" required />
           </div>
-          <div class="form-group">
-            <label for="lastName">Last Name</label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              class="form-control"
-              required
-              [(ngModel)]="newPatient.lastName"
-            />
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" id="lastName" class="form-control" [(ngModel)]="newPatient.lastName" name="lastName" required />
           </div>
-          <div class="form-group">
-            <label for="dateOfBirth">Date of Birth</label>
-            <input
-              type="date"
-              id="dateOfBirth"
-              name="dateOfBirth"
-              class="form-control"
-              required
-              [(ngModel)]="newPatient.dateOfBirth"
-            />
+          <div class="mb-3">
+            <label for="dateOfBirth" class="form-label">Date of Birth</label>
+            <input type="date" id="dateOfBirth" class="form-control" [(ngModel)]="newPatient.dateOfBirth" name="dateOfBirth" required />
           </div>
-          <div class="form-group">
-            <label for="gender">Gender</label>
-            <select
-              id="gender"
-              name="gender"
-              class="form-control"
-              required
-              [(ngModel)]="newPatient.gender"
-            >
-              <option value="">Select Gender</option>
+          <div class="mb-3">
+            <label for="gender" class="form-label">Gender</label>
+            <select id="gender" class="form-select" [(ngModel)]="newPatient.gender" name="gender" required>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="phone">Phone</label>
-            <input
-              type="text"
-              id="phone"
-              name="phone"
-              class="form-control"
-              required
-              pattern="^[0-9]{10}$"
-              [(ngModel)]="newPatient.phone"
-            />
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="tel" id="phone" class="form-control" [(ngModel)]="newPatient.phone" name="phone" required />
           </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="form-control"
-              required
-              [(ngModel)]="newPatient.email"
-            />
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" class="form-control" [(ngModel)]="newPatient.email" name="email" required />
           </div>
-          <div class="form-group">
-            <label for="street">Street</label>
-            <input
-              type="text"
-              id="street"
-              name="street"
-              class="form-control"
-              required
-              [(ngModel)]="newPatient.street"
-            />
+          <div class="mb-3">
+            <label for="street" class="form-label">Street</label>
+            <input type="text" id="street" class="form-control" [(ngModel)]="newPatient.street" name="street" required />
           </div>
-          <div class="form-group">
-            <label for="city">City</label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              class="form-control"
-              required
-              [(ngModel)]="newPatient.city"
-            />
+          <div class="mb-3">
+            <label for="city" class="form-label">City</label>
+            <input type="text" id="city" class="form-control" [(ngModel)]="newPatient.city" name="city" required />
           </div>
-          <div class="form-group">
-            <label for="state">State</label>
-            <input
-              type="text"
-              id="state"
-              name="state"
-              class="form-control"
-              required
-              [(ngModel)]="newPatient.state"
-            />
+          <div class="mb-3">
+            <label for="state" class="form-label">State</label>
+            <input type="text" id="state" class="form-control" [(ngModel)]="newPatient.state" name="state" required />
           </div>
-          <div class="form-group">
-            <label for="zipCode">Zip Code</label>
-            <input
-              type="text"
-              id="zipCode"
-              name="zipCode"
-              class="form-control"
-              required
-              pattern="^[0-9]{5}$"
-              [(ngModel)]="newPatient.zipCode"
-            />
+          <div class="mb-3">
+            <label for="zipCode" class="form-label">Zip Code</label>
+            <input type="text" id="zipCode" class="form-control" [(ngModel)]="newPatient.zipCode" name="zipCode" required />
           </div>
-          @if (newPatient.id === 0) {
-            <button type="submit" class="btn btn-primary"> Submit</button>
-          }@else {
-            <button
-            type="button"
-            class="btn btn-primary" (click)="updatePatient(patientForm)">Update</button>
-          }
-          
-           
+          <button type="submit" class="btn btn-primary">{{ newPatient.id === 0 ? 'Submit' : 'Update' }}</button>
         </form>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
-  <div class="d-flex">
-    <div class="toast-body">
-    Hello, world! This is a toast message.
-   </div>
-    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
   </div>
 </div>
