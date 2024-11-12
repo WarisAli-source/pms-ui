@@ -41,4 +41,16 @@ export class MedicalRecordsService {
     const url = `${this.apiUrl}/medical-records?patientId=${patientId}`;
     return this.http.post(url, record);
   }
+  deleteMedicalRecord(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/medical-records/${id}`);
+  }
+  getMedicalRecordById(id: number): Observable<MedicalRecord> {
+    return this.http.get<MedicalRecord>(`${this.apiUrl}/medical-records/records/${id}`);  // Corrected endpoint with patient ID
+  }
+
+  updateMedicalRecord(id: number, record: MedicalRecord): Observable<any> {
+    return this.http.put<MedicalRecord>(`${this.apiUrl}/medical-records/${id}`, record); // Corrected endpoint with patient ID
+
+  }
+
 }

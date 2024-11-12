@@ -23,7 +23,6 @@
               </div>
             </div>
   
-            <!-- Medical Records List -->
             <h6 class="text-primary">Medical Records:</h6>
             <div *ngIf="patient.medicalRecords.length > 0; else noRecords" class="list-group list-group-flush">
               <div *ngFor="let record of patient.medicalRecords" class="list-group-item">
@@ -35,6 +34,8 @@
                 <small class="text-muted">
                   Created: {{ record.createdAt | date: 'short' }} | Updated: {{ record.updatedAt | date: 'short' }}
                 </small>
+                <button class="btn btn-danger btn-sm" (click)="deleteRecord(record.id)">Delete</button>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#medicalRecordModal" (click)="editRecord(record.id,patient.id)">edit</button>
               </div>
             </div>
             <ng-template #noRecords>
@@ -84,7 +85,13 @@
             </div>
   
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary mt-3">Save Record</button>
+            @if (this.newRecord.id === 0) {
+              <button type="submit" class="btn btn-primary mt-3">Save Record</button>
+            }@else {
+              <button
+              type="button"
+              class="btn btn-primary" (click)="updateRecord(this.newRecord.id,this.newRecord)">Update</button>
+            }
           </form>
         </div>
       </div>

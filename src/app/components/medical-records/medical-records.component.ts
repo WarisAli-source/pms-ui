@@ -19,7 +19,7 @@ export class MedicalRecordsComponent {
   patientsWithRecords: PatientWithRecordsDTO[] = [];
   patients: Patient[] = [];
   medicalRecords: MedicalRecord[] = [];
-  newRecord: MedicalRecord = {patientId: 0, diagnosis: '', treatment: '', notes: '' };
+  newRecord: MedicalRecord = {id: 0, diagnosis: '', treatment: '', notes: '',patientId:0};
 
   constructor(private medicalRecordsService: MedicalRecordsService,private toastr: ToastrService) {}
 
@@ -42,14 +42,13 @@ export class MedicalRecordsComponent {
   }
 
   onSubmit(form: any) {
-    debugger;
     if (this.newRecord.patientId) {
       this.medicalRecordsService.addMedicalRecord(this.newRecord.patientId,this.newRecord).subscribe(() => {
         this.toastr.success('Medical Record added successfully');
         form.resetForm(); 
         $('.btn-close').click(); 
         this.fetchPatientsWithRecords();
-        this.newRecord = { patientId: 0, diagnosis: '', treatment: '', notes: '' };
+        this.newRecord = { id: 0, diagnosis: '', treatment: '', notes: '' ,patientId:0};
       }, error => {
         console.error('Error adding medical record:', error);
         this.toastr.error('Error adding medical record');
@@ -58,4 +57,39 @@ export class MedicalRecordsComponent {
       this.toastr.error('Please select a patient');
     }
   }
+  editRecord(id: number,patientId:number) {
+    this.medicalRecordsService.getMedicalRecordById(id).subscribe(
+      (record) => {
+        this.newRecord = record;
+        this.newRecord.patientId = patientId;
+        $('#patientId').prop("disabled",true)
+      },
+      () => {
+        this.toastr.error('Something went wrong !!!');
+      }
+    );
+  }
+  updateRecord(id:number,patientForm :MedicalRecord){
+    this.medicalRecordsService.updateMedicalRecord(id,patientForm).subscribe(
+      (MedicalRecord) =>{
+        this.toastr.success('Patient Updated successfully');
+        $('.btn-close').click(); 
+        this.fetchPatientsWithRecords();
+      },() => {
+        this.toastr.error('Something went wrong !!!');
+      }
+    )
+  }
+
+deleteRecord(recordId: number) {
+    this.medicalRecordsService.deleteMedicalRecord(recordId)
+      .subscribe(() => {
+        this.toastr.success('Medical Record Deleted successfully');
+        this.fetchPatientsWithRecords();
+      }, error => {
+        this.toastr.error('Error deleting medical record');
+        console.error('Error adding medical record:', error);
+      });
+}
+
 }

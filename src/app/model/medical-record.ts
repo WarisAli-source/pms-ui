@@ -5,4 +5,5 @@ export interface MedicalRecord {
     notes: string;
     createdAt?: string;
     updatedAt?: string;
+    id:number;
 }
