@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Patient, PatientService } from '../../services/patient.service';
 import { CommonModule, DatePipe} from '@angular/common';
-import { FormGroup, FormBuilder, Validators, FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import $ from 'jquery';
-import { ToastrService } from 'ngx-toastr';
-import { PatientWithRecordsDTO } from '../../services/medical-records.service';
+import { Patient, PatientService } from '../../services/patient.service';
+import { ToastService } from '../../services/toast.service';
+import * as XLSX from 'xlsx';
+
 
 @Component({
   selector: 'app-patients',
@@ -15,6 +16,7 @@ import { PatientWithRecordsDTO } from '../../services/medical-records.service';
 })
 export class PatientsComponent implements OnInit {
   patients: Patient[] = [];
+  searchQuery: string = '';
 
   newPatient: Patient = {
     id:0,
@@ -30,7 +32,7 @@ export class PatientsComponent implements OnInit {
     zipCode: '',
   }; 
 
-  constructor(private fb: FormBuilder, private patientService: PatientService,private toastr: ToastrService) {}
+  constructor(private fb: FormBuilder, private patientService: PatientService,private toastService :ToastService) {}
   ngOnInit(): void {
     this.getAllPatients();
   }
@@ -40,10 +42,10 @@ export class PatientsComponent implements OnInit {
     this.patientService.getAllPatients().subscribe(
       (data) => {
         this.patients = data;
-        this.toastr.success('Patients Data Fetched Successfully');
+        this.toastService.showToast('Patients Data Fetched Successfully', 'success', 3000);
       },
       (error) => {
-        this.toastr.error('Something went wrong !!!');
+        this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
       }
     );
   }
@@ -51,12 +53,12 @@ export class PatientsComponent implements OnInit {
       const newPatient: Patient = this.newPatient;
       this.patientService.registerPatient(newPatient).subscribe(
         (response) => {
-          this.toastr.success('Patient added successfully');
+          this.toastService.showToast('Patient added successfully', 'success', 3000);
           $('.btn-close').click(); 
           this.getAllPatients();
         },
         (error) => {
-          this.toastr.error('Something went wrong !!!');
+          this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
         }
       );
   }
@@ -67,36 +69,34 @@ export class PatientsComponent implements OnInit {
         this.newPatient = patient;
       },
       (error) => {
-        this.toastr.error('Something went wrong !!!');
+        this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
       }
     );
   }
   updatePatient(patientForm :any){
     this.patientService.updatePatient(this.newPatient.id,this.newPatient).subscribe(
       (resp) =>{
-        this.toastr.success('Patient Updated successfully');
+        this.toastService.showToast('Patient Updated successfully', 'success', 3000);
         $('.btn-close').click(); 
         this.getAllPatients();
       },(error) => {
-        this.toastr.error('Something went wrong !!!');
+        this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
       }
     )
   }
 
   deletePatient(id: number): void {
-    debugger
     this.patientService.deletePatient(id).subscribe(
       (response) => {
-        debugger;
         if (response === 'Success') {
-          this.toastr.success('Patient Deleted successfully');
+          this.toastService.showToast('Patient Deleted successfully', 'success', 3000);
           this.getAllPatients();
         } else {
-          console.error('Failed to delete patient');
+        this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
         }
       },
       (error) => {
-        console.error('Error deleting patient', error);
+        this.toastService.showToast('Error deleting patient', 'danger', 3000);
       }
     );
   }
@@ -116,15 +116,28 @@ export class PatientsComponent implements OnInit {
         return 0;
       }
     });
-    
-    // Toggle the sort direction for the next click
     this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     this.currentSortField = field;
   }
-  
 
+  searchPatients(): void {
+    if (this.searchQuery) {
+      this.patientService.searchPatients(this.searchQuery).subscribe((patients) => {
+        this.patients = patients;
+      });
+    } else {
+      this.getAllPatients();
+    }
+  }
+  exportToExcel(): void {
+    // Create a new worksheet
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.patients);
 
+    // Create a new workbook and append the worksheet
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Patients');
 
-
-
+    // Write the file and trigger download
+    XLSX.writeFile(wb, 'patients.xlsx');
+  }
 }

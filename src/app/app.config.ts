@@ -8,5 +8,5 @@ import { provideToastr } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideHttpClient(), provideAnimations(),
-    provideToastr(), provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+     provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
 };

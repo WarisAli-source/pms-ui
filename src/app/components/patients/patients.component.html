@@ -1,7 +1,15 @@
-<div class="container mt-4">
+<div class="container mt-4" style="margin-left: -150px;">
   <h2 class="mb-4">Patient Records</h2>
-  <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#patientModal">Add New Patient</button>
-
+  <div class="input-group mb-4">
+    <input type="text" class="form-control form-control-sm search-input" (keyup.enter)="searchPatients()" [(ngModel)]="searchQuery" placeholder="Search by First Name" />
+    <button class="btn btn-outline-primary btn-sm lookup-button" (click)="searchPatients()" ><i class="fa fa-search"></i></button>
+    <button class="btn btn-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#patientModal" title="Add New Patient">
+      <i class="fa fa-plus"></i>
+    </button>
+    <button class="btn btn-outline-primary btn-sm " (click)="exportToExcel()" title="Export to Excel" style="margin-left: 5px;">
+      <i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
+  </div>
+  
   <!-- Sortable Table for Patient Records -->
   <table class="table table-bordered table-hover">
     <thead>
@@ -24,7 +32,6 @@
         <th (click)="sortData('email')">
           Email <span *ngIf="currentSortField === 'email'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
         </th>
-      
         <th>Actions</th>
       </tr>
     </thead>
@@ -36,11 +43,13 @@
         <td>{{ patient.gender }}</td>
         <td>{{ patient.phone }}</td>
         <td>{{ patient.email }}</td>
-        <td>{{ patient.street }}, {{ patient.city }}, {{ patient.state }} {{ patient.zipCode }}</td>
         <td>
-          <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#patientModal" (click)="editPatient(patient.id)">Edit</button>
-          <button class="btn btn-danger btn-sm" (click)="deletePatient(patient.id)">Delete</button>
+          <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#patientModal" (click)="editPatient(patient.id)"><i class="fa fa-edit"></i></button>
+          <button class="btn btn-danger btn-sm" style="margin-left: 5px;" (click)="deletePatient(patient.id)"><i class="fa fa-trash"></i></button>
         </td>
+      </tr>
+      <tr *ngIf="patients && patients.length === 0">
+        <td colspan="7" class="text-center">No patients found</td>
       </tr>
     </tbody>
   </table>

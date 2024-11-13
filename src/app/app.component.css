@@ -65,4 +65,19 @@
     min-width: 250px;
     z-index: 1055; /* Ensures it appears above other elements */
   }
+  /* Sidebar default styling */
+.ds-left-menu {
+  background: var(--color-1);
+  color: #fff;
+  width: 250px;
+  position: fixed;
+  height: 100vh;
+  transition: width 0.3s ease;
+}
+
+/* When the sidebar is hidden */
+.ds-left-menu.hidden {
+  width: 0;
+}
+
   

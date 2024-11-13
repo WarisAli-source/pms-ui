@@ -3,11 +3,12 @@ import { Router, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ToastService } from './services/toast.service';
 import { CommonModule } from '@angular/common';
+import { ToastComponent } from "./components/toast/toast.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,SidebarComponent,CommonModule],
+  imports: [RouterOutlet, SidebarComponent, CommonModule, ToastComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -24,17 +25,8 @@ export class AppComponent {
   toastClass: string = '';
 
   ngOnInit() {
-    this.toastService.toastMessage$.subscribe((toast) => {
-      if (toast) {
-        this.toastMessage = toast.message;
-        this.toastClass = toast.type === 'success' ? 'bg-success text-white' : 'bg-danger text-white';
-      } else {
-        this.toastMessage = null;
-      }
-    });
+    
   }
 
-  hideToast() {
-    this.toastService.hideToast();
-  }
+
 }

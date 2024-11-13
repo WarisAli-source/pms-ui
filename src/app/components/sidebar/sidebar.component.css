@@ -17,3 +17,6 @@
     z-index: 1030;
   }
   
+  a{
+    cursor: pointer;
+  }

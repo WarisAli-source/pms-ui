@@ -1,0 +1,58 @@
+#emgrToastContMain {
+    display: block;
+    width: 25%;
+    right: 0;
+    position: fixed;
+    bottom: 0;
+    z-index: 999999;
+    max-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  .info-toast {
+    background-color: #2196F3 !important; /* Blue */
+    color: white;
+  }
+  
+  .success-toast {
+    background-color: #4CAF50 !important; /* Green */
+    color: white;
+  }
+  
+  .danger-toast {
+    background-color: #F44336 !important; /* Red */
+    color: white;
+  }
+  
+  .warning-toast {
+    background-color: #FB8C00 !important; /* Orange */
+    color: white;
+  }
+  
+  .toast-msg-cont {
+    display: flex;
+    border: 1px solid lightgray;
+    width: 96%;
+    margin: 2%;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    box-shadow: 2px 2px 12px 1px rgba(43, 43, 43, 0.25);
+    position: relative;
+  }
+  
+  .toast-msg {
+    width: 93%;
+    word-break: break-word;
+  }
+  
+  .toast-dismiss {
+    width: 17px;
+    padding: 0px 2px;
+    border-radius: 9px;
+    text-align: center;
+    cursor: pointer;
+    margin-right: 3px;
+  }
+  

@@ -1,24 +1,19 @@
+// toast.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
-
-export interface ToastMessage {
-  message: string;
-  type: 'success' | 'error';
-}
 @Injectable({
   providedIn: 'root'
 })
 export class ToastService {
+  private toastSubject = new Subject<{ message: string; type: string; duration: number }>();
 
-  toastMessage$ = new BehaviorSubject<{ message: string, type: 'success' | 'error' } | null>(null);
-
-  showToast(message: string, type: 'success' | 'error', duration: number = 3000) {
-    this.toastMessage$.next({ message, type });
-    setTimeout(() => this.hideToast(), duration);
+  getToast(): Observable<{ message: string; type: string; duration: number }> {
+    return this.toastSubject.asObservable();
   }
 
-  hideToast() {
-    this.toastMessage$.next(null);
+  showToast(message: string, type: string = 'info', duration: number = 3000): void {
+    console.log('Toast triggered:', { message, type, duration });
+    this.toastSubject.next({ message, type, duration });
   }
 }

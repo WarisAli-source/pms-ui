@@ -1,0 +1,11 @@
+<div id="emgrToastContMain">
+    <div *ngFor="let toast of toasts" [ngClass]="toast.type + '-toast'" class="toast-msg-cont">
+      <span class="toast-icon">
+        <i class="fa" [ngClass]="getIconClass(toast.type)" aria-hidden="true"></i>
+      </span>
+      <div class="toast-msg">{{ toast.message }}</div>
+      <span class="toast-dismiss" (click)="dismissToast(toast)">
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </span>
+    </div>
+  </div>  

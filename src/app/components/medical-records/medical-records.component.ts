@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { PatientWithRecordsDTO, MedicalRecordsService } from '../../services/medical-records.service';
 import { CommonModule } from '@angular/common';
 import { MedicalRecord } from '../../model/medical-record';
-import { Patient } from '../../services/patient.service';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Patient } from '../../services/patient.service';
+import { PatientWithRecordsDTO, MedicalRecordsService } from '../../services/medical-records.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-medical-records',
@@ -21,7 +22,7 @@ export class MedicalRecordsComponent {
   medicalRecords: MedicalRecord[] = [];
   newRecord: MedicalRecord = {id: 0, diagnosis: '', treatment: '', notes: '',patientId:0};
 
-  constructor(private medicalRecordsService: MedicalRecordsService,private toastr: ToastrService) {}
+  constructor(private medicalRecordsService: MedicalRecordsService,private toastService: ToastService) {}
 
   ngOnInit(): void {
     this.fetchPatientsWithRecords();
@@ -31,7 +32,7 @@ export class MedicalRecordsComponent {
   fetchPatientsWithRecords() {
     this.medicalRecordsService.getAllPatientsWithMedicalRecords().subscribe(data => {
       this.patientsWithRecords = data;
-      this.toastr.success('Patient Medical Records Fetched Successfully');
+      this.toastService.showToast('Patient Medical Records Fetched Successfully', 'success', 3000);
     });
   }
 
@@ -44,17 +45,19 @@ export class MedicalRecordsComponent {
   onSubmit(form: any) {
     if (this.newRecord.patientId) {
       this.medicalRecordsService.addMedicalRecord(this.newRecord.patientId,this.newRecord).subscribe(() => {
-        this.toastr.success('Medical Record added successfully');
+        this.toastService.showToast('Medical Record added successfully', 'success', 3000);
+
         form.resetForm(); 
         $('.btn-close').click(); 
         this.fetchPatientsWithRecords();
         this.newRecord = { id: 0, diagnosis: '', treatment: '', notes: '' ,patientId:0};
       }, error => {
         console.error('Error adding medical record:', error);
-        this.toastr.error('Error adding medical record');
+        this.toastService.showToast('Error adding medical record', 'danger', 3000);
+
       });
     } else {
-      this.toastr.error('Please select a patient');
+      this.toastService.showToast('Please select a patient', 'danger', 3000);
     }
   }
   editRecord(id: number,patientId:number) {
@@ -65,18 +68,18 @@ export class MedicalRecordsComponent {
         $('#patientId').prop("disabled",true)
       },
       () => {
-        this.toastr.error('Something went wrong !!!');
+        this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
       }
     );
   }
   updateRecord(id:number,patientForm :MedicalRecord){
     this.medicalRecordsService.updateMedicalRecord(id,patientForm).subscribe(
       (MedicalRecord) =>{
-        this.toastr.success('Patient Updated successfully');
+        this.toastService.showToast('Patient Updated successfully', 'success', 3000);
         $('.btn-close').click(); 
         this.fetchPatientsWithRecords();
       },() => {
-        this.toastr.error('Something went wrong !!!');
+        this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
       }
     )
   }
@@ -84,10 +87,10 @@ export class MedicalRecordsComponent {
 deleteRecord(recordId: number) {
     this.medicalRecordsService.deleteMedicalRecord(recordId)
       .subscribe(() => {
-        this.toastr.success('Medical Record Deleted successfully');
+        this.toastService.showToast('Medical Record Deleted successfully','success',3000);
         this.fetchPatientsWithRecords();
       }, error => {
-        this.toastr.error('Error deleting medical record');
+        this.toastService.showToast('Error deleting medical record','danger',2000);
         console.error('Error adding medical record:', error);
       });
 }

@@ -50,4 +50,7 @@ export class PatientService {
   deletePatient(id: number): Observable<string> {
     return this.http.delete<string>(`${this.apiUrl}/${id}`, { responseType: 'text' as 'json' }); // Corrected endpoint with patient ID
   }
+  searchPatients(query: string): Observable<Patient[]> {
+    return this.http.get<Patient[]>(`${this.apiUrl}/search?name=${query}`);
+  }
 }
