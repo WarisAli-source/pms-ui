@@ -1,4 +1,4 @@
-<div class="container mt-4" style="margin-left: -150px;">
+<div class="container mt-4" style="margin-left: -150px;margin-top: -15px !important;">
   <h2 class="mb-4">Patient Records</h2>
   <div class="input-group mb-4">
     <input type="text" class="form-control form-control-sm search-input" (keyup.enter)="searchPatients()" [(ngModel)]="searchQuery" placeholder="Search by First Name" />
@@ -9,9 +9,7 @@
     <button class="btn btn-outline-primary btn-sm " (click)="exportToExcel()" title="Export to Excel" style="margin-left: 5px;">
       <i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
   </div>
-  
-  <!-- Sortable Table for Patient Records -->
-  <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover">
     <thead>
       <tr>
         <th (click)="sortData('firstName')">
@@ -53,11 +51,21 @@
       </tr>
     </tbody>
   </table>
+  <!-- Pagination Controls -->
+  <div class="pagination-controls text-center">
+    <a href="#" class="mx-3" (click)="previousPage()" [class.disabled]="currentPage === 1">
+      &lt; <!-- Left arrow symbol -->
+    </a>
+    <span class="mx-3">Page {{ currentPage }} of {{ totalPages }}</span>
+    <a href="#" class="mx-3" (click)="nextPage()" [class.disabled]="currentPage === totalPages">
+      &gt; <!-- Right arrow symbol -->
+    </a>
+  </div>
+
 </div>
 
-<!-- Modal for Adding/Editing Patient -->
 <div class="modal fade" id="patientModal" tabindex="-1" aria-labelledby="patientModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="patientModalLabel">{{ newPatient.id === 0 ? 'Add New Patient' : 'Edit Patient' }}</h5>
@@ -65,51 +73,65 @@
       </div>
       <div class="modal-body">
         <form #patientForm="ngForm" (ngSubmit)="newPatient.id === 0 ? onSubmit(patientForm) : updatePatient(patientForm)">
-          <div class="mb-3">
-            <label for="firstName" class="form-label">First Name</label>
-            <input type="text" id="firstName" class="form-control" [(ngModel)]="newPatient.firstName" name="firstName" required />
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="firstName" class="form-label">First Name</label>
+              <input type="text" id="firstName" class="form-control" [(ngModel)]="newPatient.firstName" name="firstName" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input type="text" id="lastName" class="form-control" [(ngModel)]="newPatient.lastName" name="lastName" required />
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="lastName" class="form-label">Last Name</label>
-            <input type="text" id="lastName" class="form-control" [(ngModel)]="newPatient.lastName" name="lastName" required />
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="dateOfBirth" class="form-label">Date of Birth</label>
+              <input type="date" id="dateOfBirth" class="form-control" [(ngModel)]="newPatient.dateOfBirth" name="dateOfBirth" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="gender" class="form-label">Gender</label>
+              <select id="gender" class="form-select" [(ngModel)]="newPatient.gender" name="gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="dateOfBirth" class="form-label">Date of Birth</label>
-            <input type="date" id="dateOfBirth" class="form-control" [(ngModel)]="newPatient.dateOfBirth" name="dateOfBirth" required />
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="phone" class="form-label">Phone</label>
+              <input type="tel" id="phone" class="form-control" [(ngModel)]="newPatient.phone" name="phone" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" class="form-control" [(ngModel)]="newPatient.email" name="email" required />
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="gender" class="form-label">Gender</label>
-            <select id="gender" class="form-select" [(ngModel)]="newPatient.gender" name="gender" required>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="street" class="form-label">Street</label>
+              <input type="text" id="street" class="form-control" [(ngModel)]="newPatient.street" name="street" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="city" class="form-label">City</label>
+              <input type="text" id="city" class="form-control" [(ngModel)]="newPatient.city" name="city" required />
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="phone" class="form-label">Phone</label>
-            <input type="tel" id="phone" class="form-control" [(ngModel)]="newPatient.phone" name="phone" required />
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="state" class="form-label">State</label>
+              <input type="text" id="state" class="form-control" [(ngModel)]="newPatient.state" name="state" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="zipCode" class="form-label">Zip Code</label>
+              <input type="text" id="zipCode" class="form-control" [(ngModel)]="newPatient.zipCode" name="zipCode" required />
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" id="email" class="form-control" [(ngModel)]="newPatient.email" name="email" required />
-          </div>
-          <div class="mb-3">
-            <label for="street" class="form-label">Street</label>
-            <input type="text" id="street" class="form-control" [(ngModel)]="newPatient.street" name="street" required />
-          </div>
-          <div class="mb-3">
-            <label for="city" class="form-label">City</label>
-            <input type="text" id="city" class="form-control" [(ngModel)]="newPatient.city" name="city" required />
-          </div>
-          <div class="mb-3">
-            <label for="state" class="form-label">State</label>
-            <input type="text" id="state" class="form-control" [(ngModel)]="newPatient.state" name="state" required />
-          </div>
-          <div class="mb-3">
-            <label for="zipCode" class="form-label">Zip Code</label>
-            <input type="text" id="zipCode" class="form-control" [(ngModel)]="newPatient.zipCode" name="zipCode" required />
-          </div>
-          <button type="submit" class="btn btn-primary">{{ newPatient.id === 0 ? 'Submit' : 'Update' }}</button>
+          <button type="submit" class="btn btn-primary" style="margin-left: 660px;" >{{ newPatient.id === 0 ? 'Submit' : 'Update' }}</button>
         </form>
       </div>
     </div>

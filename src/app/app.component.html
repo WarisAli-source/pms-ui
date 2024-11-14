@@ -1,8 +1,7 @@
 <app-sidebar></app-sidebar>
 
-<!-- Main content area, adjusts based on sidebar visibility -->
 <div class="main-content p-4" [style.marginLeft]="isSidebarVisible ? '250px' : '0'" style="margin-top: 56px;">
-  <router-outlet></router-outlet> <!-- The routed component will be displayed here -->
+  <router-outlet></router-outlet> 
 </div>
 
 <app-toast></app-toast>

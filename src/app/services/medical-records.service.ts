@@ -36,6 +36,9 @@ export class MedicalRecordsService {
   getAllMedicalRecords(): Observable<MedicalRecord[]> {
     return this.http.get<MedicalRecord[]>(`${this.apiUrl}/medical-records`);
   }
+  getAllMedicalRecordsCount():Observable<number>{
+    return this.http.get<number>(`${this.apiUrl}/medical-records/medicalRecordsCount`);
+  }
 
   addMedicalRecord(patientId: number, record: MedicalRecord): Observable<any> {
     const url = `${this.apiUrl}/medical-records?patientId=${patientId}`;

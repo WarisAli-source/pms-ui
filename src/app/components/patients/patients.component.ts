@@ -16,7 +16,11 @@ import * as XLSX from 'xlsx';
 })
 export class PatientsComponent implements OnInit {
   patients: Patient[] = [];
+  paginatedPatients: Patient[] = [];
   searchQuery: string = '';
+  itemsPerPage: number = 10;
+  currentPage: number = 1;
+  totalPages: number = 0;
 
   newPatient: Patient = {
     id:0,
@@ -38,16 +42,36 @@ export class PatientsComponent implements OnInit {
   }
 
   getAllPatients(): void {
-  
     this.patientService.getAllPatients().subscribe(
       (data) => {
         this.patients = data;
+        this.totalPages = Math.ceil(this.patients.length / this.itemsPerPage);
+        this.updatePaginatedPatients();
         this.toastService.showToast('Patients Data Fetched Successfully', 'success', 3000);
       },
       (error) => {
         this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
       }
     );
+  }
+  updatePaginatedPatients() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedPatients = this.patients.slice(start, end);
+  }
+  
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedPatients();
+    }
+  }
+  
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedPatients();
+    }
   }
   onSubmit(patientForm: any) {
       const newPatient: Patient = this.newPatient;

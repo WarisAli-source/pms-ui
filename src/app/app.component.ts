@@ -23,10 +23,7 @@ export class AppComponent {
   }
   toastMessage: string | null = null;
   toastClass: string = '';
-
   ngOnInit() {
     
   }
-
-
 }

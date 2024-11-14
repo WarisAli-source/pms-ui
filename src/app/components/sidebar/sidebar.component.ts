@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
@@ -24,6 +24,11 @@ export class SidebarComponent {
     this.isSidebarVisible = false; 
     this.router.navigate(['/medical-records']); 
   }
+  navigateToDashboard() {
+    this.isSidebarVisible = false; 
+    this.router.navigate(['/app-dashboard']); 
+  }
+
  
 }
 

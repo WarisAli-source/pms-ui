@@ -7,7 +7,7 @@ export interface Patient {
   id: number;
   firstName: string;
   lastName: string;
-  dateOfBirth: string; // Use `string` or `Date` depending on your handling of dates
+  dateOfBirth: string;
   gender: string;
   phone: string;
   email: string;
@@ -26,29 +26,27 @@ export class PatientService {
 
   private apiUrl = environment.API_URL_CLIENT + '/patients'; 
 
-  // Get all patients
   getAllPatients(): Observable<Patient[]> {
     return this.http.get<Patient[]>(this.apiUrl);
   }
-
-  // Get a patient by ID
-  getPatientById(id: number): Observable<Patient> {
-    return this.http.get<Patient>(`${this.apiUrl}/${id}`);  // Corrected endpoint with patient ID
+  getAllPatientsCount(): Observable<number> {
+    return this.http.get<number>(this.apiUrl +'/patientCount');
   }
 
-  // Register a new patient
+  getPatientById(id: number): Observable<Patient> {
+    return this.http.get<Patient>(`${this.apiUrl}/${id}`);  
+  }
+
   registerPatient(patient: Patient): Observable<Patient> {
     return this.http.post<Patient>(this.apiUrl, patient);
   }
 
-  // Update an existing patient
   updatePatient(id: number, patient: Patient): Observable<Patient> {
-    return this.http.put<Patient>(`${this.apiUrl}/${id}`, patient); // Corrected endpoint with patient ID
+    return this.http.put<Patient>(`${this.apiUrl}/${id}`, patient); 
   }
 
-  // Delete a patient by ID
   deletePatient(id: number): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/${id}`, { responseType: 'text' as 'json' }); // Corrected endpoint with patient ID
+    return this.http.delete<string>(`${this.apiUrl}/${id}`, { responseType: 'text' as 'json' }); 
   }
   searchPatients(query: string): Observable<Patient[]> {
     return this.http.get<Patient[]>(`${this.apiUrl}/search?name=${query}`);
