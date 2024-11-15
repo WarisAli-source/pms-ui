@@ -47,7 +47,6 @@ export class PatientsComponent implements OnInit {
         this.patients = data;
         this.totalPages = Math.ceil(this.patients.length / this.itemsPerPage);
         this.updatePaginatedPatients();
-        this.toastService.showToast('Patients Data Fetched Successfully', 'success', 3000);
       },
       (error) => {
         this.toastService.showToast('Something went wrong !!!', 'danger', 3000);

@@ -32,13 +32,15 @@ export class MedicalRecordsComponent {
   fetchPatientsWithRecords() {
     this.medicalRecordsService.getAllPatientsWithMedicalRecords().subscribe(data => {
       this.patientsWithRecords = data;
-      this.toastService.showToast('Patient Medical Records Fetched Successfully', 'success', 3000);
     });
   }
 
   fetchPatients() {
     this.medicalRecordsService.getAllPatients().subscribe(data => {
       this.patients = data;
+    }, error => {
+      console.error('Error show medical record:', error);
+      this.toastService.showToast('Error showin medical record', 'danger', 3000);
     });
   }
 
