@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environments';
 import { Patient } from './patient.service';
 import { MedicalRecord } from '../model/medical-record';
+import { AuthServiceService } from './auth-service.service';
 
 
 export interface PatientWithRecordsDTO {
@@ -23,37 +24,50 @@ export class MedicalRecordsService {
 
   private apiUrl = environment.API_URL_CLIENT;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private authService: AuthServiceService) {}
+  getHeaders(): { [header: string]: string } {
+    const token = this.authService.getToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
 
   getAllPatientsWithMedicalRecords(): Observable<PatientWithRecordsDTO[]> {
-    return this.http.get<PatientWithRecordsDTO[]>(`${this.apiUrl}/medical-records/all-records`);
+    const headers = this.getHeaders();
+    return this.http.get<PatientWithRecordsDTO[]>(`${this.apiUrl}/medical-records/all-records`,{headers});
   }
 
   getAllPatients(): Observable<Patient[]> {
-    return this.http.get<Patient[]>(`${this.apiUrl}/patients`);
+    const headers = this.getHeaders();
+    return this.http.get<Patient[]>(`${this.apiUrl}/patients`,{headers});
   }
 
   getAllMedicalRecords(): Observable<MedicalRecord[]> {
-    return this.http.get<MedicalRecord[]>(`${this.apiUrl}/medical-records`);
+    debugger
+    const headers = this.getHeaders();
+    return this.http.get<MedicalRecord[]>(`${this.apiUrl}/medical-records`,{headers});
   }
   getAllMedicalRecordsCount():Observable<number>{
-    return this.http.get<number>(`${this.apiUrl}/medical-records/medicalRecordsCount`);
+    debugger
+    const headers = this.getHeaders();
+    return this.http.get<number>(`${this.apiUrl}/medical-records/medicalRecordsCount`,{headers});
   }
 
   addMedicalRecord(patientId: number, record: MedicalRecord): Observable<any> {
+    const headers = this.getHeaders();
     const url = `${this.apiUrl}/medical-records?patientId=${patientId}`;
-    return this.http.post(url, record);
+    return this.http.post(url, record,{headers});
   }
   deleteMedicalRecord(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/medical-records/${id}`);
+    const headers = this.getHeaders();
+    return this.http.delete<void>(`${this.apiUrl}/medical-records/${id}`,{headers});
   }
   getMedicalRecordById(id: number): Observable<MedicalRecord> {
-    return this.http.get<MedicalRecord>(`${this.apiUrl}/medical-records/records/${id}`);  // Corrected endpoint with patient ID
+    const headers = this.getHeaders();
+    return this.http.get<MedicalRecord>(`${this.apiUrl}/medical-records/records/${id}`,{headers}); 
   }
 
   updateMedicalRecord(id: number, record: MedicalRecord): Observable<any> {
-    return this.http.put<MedicalRecord>(`${this.apiUrl}/medical-records/${id}`, record); // Corrected endpoint with patient ID
-
+    const headers = this.getHeaders();
+    return this.http.put<MedicalRecord>(`${this.apiUrl}/medical-records/${id}`, record,{headers}); 
   }
 
 }
