@@ -14,12 +14,17 @@
       <div class="form-group">
         <label for="role">Role</label>
         <select id="role" class="form-control" [(ngModel)]="role" name="role" required>
-          <option value="ADMIN">Admin</option>
-          <option value="PATIENT">Patient</option>
-          <option value="DOCTOR">Doctor</option>
+          <option value="ROLE_ADMIN">Admin</option>
+          <option value="ROLE_PATIENT">Patient</option>
+          <option value="ROLE_DOCTOR">Doctor</option>
         </select>
       </div>
   
       <button type="submit" class="btn btn-primary">Login</button>
     </form>
+
+    <div class="signup-link mt-3">
+      <p>Don't have an account?</p>
+      <button class="btn btn-secondary" (click)="onNavigateToSignup()">Signup</button>
+    </div>
   </div>  

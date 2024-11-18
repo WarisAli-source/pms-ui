@@ -41,12 +41,10 @@ export class MedicalRecordsService {
   }
 
   getAllMedicalRecords(): Observable<MedicalRecord[]> {
-    debugger
     const headers = this.getHeaders();
     return this.http.get<MedicalRecord[]>(`${this.apiUrl}/medical-records`,{headers});
   }
   getAllMedicalRecordsCount():Observable<number>{
-    debugger
     const headers = this.getHeaders();
     return this.http.get<number>(`${this.apiUrl}/medical-records/medicalRecordsCount`,{headers});
   }

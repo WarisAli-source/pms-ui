@@ -5,9 +5,14 @@ import { MedicalRecordsComponent } from './components/medical-records/medical-re
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './auth/auth.guard';
+import { SignupComponent } from './components/signup/signup.component';
 
 export const routes: Routes = [
 
+    { 
+        path: 'signup', 
+        component: SignupComponent 
+    },
     { 
         path: '', 
         redirectTo: '/login', 
