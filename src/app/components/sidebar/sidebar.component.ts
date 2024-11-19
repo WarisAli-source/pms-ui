@@ -11,7 +11,7 @@ import { ToastService } from '../../services/toast.service';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-
+  @Output() logoutEvent = new EventEmitter<void>();
   isSidebarVisible = false; 
   toggleSidebar() {
     this.isSidebarVisible = !this.isSidebarVisible;
@@ -33,7 +33,8 @@ export class SidebarComponent {
     localStorage.removeItem('authToken');
     this.isSidebarVisible = false;
     this.toastService.showToast('You have been logged out.', 'success', 3000);
-    this.router.navigate(['/login']); 
+    this.logoutEvent.emit();
+
   }
  
 }

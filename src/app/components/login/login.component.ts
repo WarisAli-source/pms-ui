@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -17,6 +17,7 @@ export class LoginComponent {
   username: string = '';
   password: string = '';
   role: string = '';
+  @Output() loginSuccess = new EventEmitter<void>();
 
   constructor(private http: HttpClient, private router: Router,private authService:AuthServiceService,private toastService: ToastService) {}
 
@@ -25,7 +26,7 @@ export class LoginComponent {
     this.http.post<any>('http://localhost:8080/pms/login', loginData).subscribe(
       (response) => {
         this.authService.setToken(response.jwtToken);
-        this.router.navigate(['/app-dashboard']);
+        this.loginSuccess.emit(); 
         this.toastService.showToast('Logged in Successfully', 'success', 3000);
       },
       (error) => {
@@ -39,7 +40,9 @@ export class LoginComponent {
       }
     );
   }
+  
+  @Output() navigateToSignup = new EventEmitter<void>();
   onNavigateToSignup() {
-    this.router.navigate(['/signup']);
+    this.navigateToSignup.emit();
   }
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastComponent } from '../toast/toast.component';
@@ -19,13 +19,12 @@ export class SignupComponent {
     username: '',
     email: '',
     password: '',
-    roles: [] as string[] // Initialize as an empty array
+    roles: [] as string[]
   };
 
   constructor(private http: HttpClient, private router: Router,private toastService : ToastService) {}
 
   onSignup() {
-    debugger
     const transformedData = {
       username: this.signupData.username,
       email: this.signupData.email,
@@ -43,4 +42,8 @@ export class SignupComponent {
     );
   }
 
+  @Output() navigateToLogin = new EventEmitter<void>();
+  triggerLoginNavigation() {
+    this.navigateToLogin.emit();
+  }
 }

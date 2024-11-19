@@ -1,7 +1,16 @@
-<app-sidebar></app-sidebar>
+<ng-container *ngIf="isLoggedIn; else authPage">
+  <app-sidebar (logoutEvent)="handleLogout()"></app-sidebar>
+  <div class="main-content p-4" [style.marginLeft]="isSidebarVisible ? '250px' : '0'" style="margin-top: 56px;">
+    <router-outlet></router-outlet>
+  </div>
+  <app-toast></app-toast>
+</ng-container>
 
-<div class="main-content p-4" [style.marginLeft]="isSidebarVisible ? '250px' : '0'" style="margin-top: 56px;">
-  <router-outlet></router-outlet> 
-</div>
-
-<app-toast></app-toast>
+<ng-template #authPage>
+  <ng-container *ngIf="isLoginView; else signupPage">
+    <app-login (navigateToSignup)="showSignup()" (loginSuccess)="onLoginSuccess()"></app-login>
+  </ng-container>
+  <ng-template #signupPage>
+    <app-signup (navigateToLogin)="showLogin()"></app-signup>
+  </ng-template>
+</ng-template>

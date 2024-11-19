@@ -1,30 +1,54 @@
-<div class="login-container">
-    <h2>Login</h2>
+<div class="d-flex align-items-center justify-content-center vh-100">
+  <div class="login-container bg-light shadow-lg p-4 rounded" style="width: 400px;">
+    <h2 class="text-center mb-4 text-primary">Login</h2>
     <form (ngSubmit)="onLogin()">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" class="form-control" [(ngModel)]="username" name="username" required />
+      <div class="form-group mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          class="form-control"
+          [(ngModel)]="username"
+          name="username"
+          placeholder="Enter your username"
+          required
+        />
       </div>
-      
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" class="form-control" [(ngModel)]="password" name="password" required />
+
+      <div class="form-group mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        />
       </div>
-  
-      <div class="form-group">
-        <label for="role">Role</label>
-        <select id="role" class="form-control" [(ngModel)]="role" name="role" required>
+
+      <div class="form-group mb-4">
+        <label for="role" class="form-label">Role</label>
+        <select
+          id="role"
+          class="form-select"
+          [(ngModel)]="role"
+          name="role"
+          required
+        >
           <option value="ROLE_ADMIN">Admin</option>
           <option value="ROLE_PATIENT">Patient</option>
           <option value="ROLE_DOCTOR">Doctor</option>
         </select>
       </div>
-  
-      <button type="submit" class="btn btn-primary">Login</button>
+
+      <button type="submit" class="btn btn-primary w-100">Login</button>
     </form>
 
-    <div class="signup-link mt-3">
+    <div class="signup-link mt-4 text-center">
       <p>Don't have an account?</p>
-      <button class="btn btn-secondary" (click)="onNavigateToSignup()">Signup</button>
+      <button class="btn btn-link text-secondary" (click)="onNavigateToSignup()">Signup</button>
     </div>
-  </div>  
+  </div>
+</div>
