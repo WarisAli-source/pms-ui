@@ -37,7 +37,7 @@ export class MedicalRecordsService {
 
   getAllPatients(): Observable<Patient[]> {
     const headers = this.getHeaders();
-    return this.http.get<Patient[]>(`${this.apiUrl}/patients`,{headers});
+    return this.http.get<Patient[]>(`${this.apiUrl}/patients/allPatientsWithoutPagination`,{headers});
   }
 
   getAllMedicalRecords(): Observable<MedicalRecord[]> {

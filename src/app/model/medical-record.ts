@@ -7,3 +7,11 @@ export interface MedicalRecord {
     updatedAt?: string;
     id:number;
 }
+
+export interface PaginatedResponse<T> {
+    content: T[];
+    totalPages: number;
+    totalElements: number;
+    pageNumber: number;
+    pageSize: number;
+  }

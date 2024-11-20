@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environments';
 import { AuthServiceService } from './auth-service.service';
+import { PaginatedResponse } from '../model/medical-record';
 
 export interface Patient {
   id: number;
@@ -36,6 +37,16 @@ export class PatientService {
   getAllPatients(): Observable<Patient[]> {
     const headers = this.getHeaders();
     return this.http.get<Patient[]>(this.apiUrl, { headers });
+  }
+  getAllPatientsPagination(page: number, size: number, sortBy: string, direction: string): Observable<PaginatedResponse<Patient>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('direction', direction);
+  
+    const headers = new HttpHeaders(this.getHeaders());
+    return this.http.get<PaginatedResponse<Patient>>(this.apiUrl, { params, headers });
   }
 
   getAllPatientsCount(): Observable<number> {

@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, DebugElement, Input, OnInit } from '@angular/core';
 import { CommonModule, DatePipe} from '@angular/common';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import $ from 'jquery';
 import { Patient, PatientService } from '../../services/patient.service';
 import { ToastService } from '../../services/toast.service';
 import * as XLSX from 'xlsx';
+import { PaginatedResponse } from '../../model/medical-record';
 
 
 @Component({
@@ -38,21 +39,26 @@ export class PatientsComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private patientService: PatientService,private toastService :ToastService) {}
   ngOnInit(): void {
-    this.getAllPatients();
+    this.getAllPatientsPagination();
   }
 
-  getAllPatients(): void {
-    this.patientService.getAllPatients().subscribe(
-      (data) => {
-        this.patients = data;
-        this.totalPages = Math.ceil(this.patients.length / this.itemsPerPage);
-        this.updatePaginatedPatients();
+  getAllPatientsPagination(): void {
+    this.patientService.getAllPatientsPagination(
+      this.currentPage - 1,
+      this.itemsPerPage,
+      this.currentSortField || 'id',
+      this.sortDirection
+    ).subscribe(
+      (data: PaginatedResponse<Patient>) => {
+        this.patients = data.content;
+        this.totalPages = data.totalPages;
       },
       (error) => {
         this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
       }
     );
   }
+  
   updatePaginatedPatients() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
@@ -60,16 +66,17 @@ export class PatientsComponent implements OnInit {
   }
   
   nextPage() {
-    if (this.currentPage < this.totalPages) {
+    if (this.currentPage < this.totalPages) {debugger
       this.currentPage++;
-      this.updatePaginatedPatients();
+      console.log('Requesting page: ', this.currentPage);
+      this.getAllPatientsPagination();
     }
   }
   
   previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.updatePaginatedPatients();
+      this.getAllPatientsPagination();
     }
   }
   onSubmit(patientForm: any) {
@@ -78,7 +85,7 @@ export class PatientsComponent implements OnInit {
         (response) => {
           this.toastService.showToast('Patient added successfully', 'success', 3000);
           $('.btn-close').click(); 
-          this.getAllPatients();
+          this.getAllPatientsPagination();
         },
         (error) => {
           this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
@@ -101,7 +108,7 @@ export class PatientsComponent implements OnInit {
       (resp) =>{
         this.toastService.showToast('Patient Updated successfully', 'success', 3000);
         $('.btn-close').click(); 
-        this.getAllPatients();
+        this.getAllPatientsPagination();
       },(error) => {
         this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
       }
@@ -113,7 +120,7 @@ export class PatientsComponent implements OnInit {
       (response) => {
         if (response === 'Success') {
           this.toastService.showToast('Patient Deleted successfully', 'success', 3000);
-          this.getAllPatients();
+          this.getAllPatientsPagination();
         } else {
         this.toastService.showToast('Something went wrong !!!', 'danger', 3000);
         }
@@ -127,20 +134,9 @@ export class PatientsComponent implements OnInit {
   sortDirection: 'asc' | 'desc' = 'asc';
   
   sortData(field: keyof Patient): void {
-    this.patients.sort((a, b) => {
-      const valueA = a[field];
-      const valueB = b[field];
-      
-      if (valueA < valueB) {
-        return this.sortDirection === 'asc' ? -1 : 1;
-      } else if (valueA > valueB) {
-        return this.sortDirection === 'asc' ? 1 : -1;
-      } else {
-        return 0;
-      }
-    });
-    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     this.currentSortField = field;
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    this.getAllPatientsPagination();
   }
 
   searchPatients(): void {
@@ -149,7 +145,7 @@ export class PatientsComponent implements OnInit {
         this.patients = patients;
       });
     } else {
-      this.getAllPatients();
+      this.getAllPatientsPagination();
     }
   }
   exportToExcel(): void {
